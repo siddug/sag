@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Admin {
+  id          String   @id @default(cuid())
+  phraseHash  String   @unique
+  createdAt   DateTime @default(now())
+
+  aiGameTemplates   AIGameTemplate[]
+  impostersGames    ImpostersGame[]
+  scoreTrackerGames ScoreTrackerGame[]
+}
+
+model AIGameTemplate {
+  id                  String   @id @default(cuid())
+  adminId             String
+  admin               Admin    @relation(fields: [adminId], references: [id])
+  name                String
+  gameType            String
+  systemPrompt        String
+  scoringInstructions String?
+  initialScore        Int      @default(0)
+  apiKeys             String
+  createdAt           DateTime @default(now())
+
+  sessions AIGameSession[]
+}
+
+model AIGameSession {
+  id           String         @id @default(cuid())
+  templateId   String
+  template     AIGameTemplate @relation(fields: [templateId], references: [id])
+  playerName   String?
+  currentScore Int            @default(0)
+  chatHistory  String         @default("[]")
+  isFrozen     Boolean        @default(false)
+  shareId      String?        @unique
+  createdAt    DateTime       @default(now())
+}
+
+model ImpostersGame {
+  id                  String   @id @default(cuid())
+  adminId             String
+  admin               Admin    @relation(fields: [adminId], references: [id])
+  name                String
+  teams               String
+  questionPairs       String
+  participantsPerTeam Int
+  votersPerTeam       Int
+  currentMode         String   @default("signup")
+  currentQuestion     Int      @default(0)
+  createdAt           DateTime @default(now())
+
+  participants ImpostersParticipant[]
+  votes        ImpostersVote[]
+}
+
+model ImpostersParticipant {
+  id              String        @id @default(cuid())
+  gameId          String
+  game            ImpostersGame @relation(fields: [gameId], references: [id])
+  name            String
+  teamName        String
+  role            String
+  hasFakeQuestion Boolean       @default(false)
+  answer          String?
+  questionNumber  Int?
+  createdAt       DateTime      @default(now())
+
+  votesReceived ImpostersVote[] @relation("VotedFor")
+  votesCast     ImpostersVote[] @relation("VotedBy")
+}
+
+model ImpostersVote {
+  id             String               @id @default(cuid())
+  gameId         String
+  game           ImpostersGame        @relation(fields: [gameId], references: [id])
+  questionNumber Int
+  voterId        String
+  voter          ImpostersParticipant @relation("VotedBy", fields: [voterId], references: [id])
+  votedForId     String
+  votedFor       ImpostersParticipant @relation("VotedFor", fields: [votedForId], references: [id])
+  createdAt      DateTime             @default(now())
+}
+
+model ScoreTrackerGame {
+  id           String   @id @default(cuid())
+  adminId      String
+  admin        Admin    @relation(fields: [adminId], references: [id])
+  name         String
+  teams        String
+  scoreHistory String   @default("[]")
+  createdAt    DateTime @default(now())
+}

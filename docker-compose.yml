@@ -1,0 +1,12 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3456:3456"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3456
+    restart: unless-stopped

@@ -1,0 +1,18 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - "3456:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/data/prod.db
+      - AUTH_SECRET=${AUTH_SECRET}
+    volumes:
+      - sag_data:/app/data
+    restart: unless-stopped
+
+volumes:
+  sag_data:
+    driver: local
