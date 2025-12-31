@@ -49,7 +49,11 @@ COPY --from=builder /app/src/generated ./src/generated
 # Create data directory for SQLite
 RUN mkdir -p /app/data
 
+# Copy and make startup script executable
+COPY start.sh ./
+RUN chmod +x start.sh
+
 EXPOSE 3000
 
 # Run migrations and start the production server
-CMD ["sh", "-c", "npx prisma db push && npm run start"]
+CMD ["./start.sh"]
