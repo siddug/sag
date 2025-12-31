@@ -15,16 +15,14 @@ interface Game {
 }
 
 const SCORE_BUTTONS = [
-  { value: 1, color: 'bg-green-400 hover:bg-green-500' },
-  { value: -1, color: 'bg-red-300 hover:bg-red-400' },
-  { value: 5, color: 'bg-green-500 hover:bg-green-600' },
-  { value: 10, color: 'bg-green-600 hover:bg-green-700' },
-  { value: 15, color: 'bg-green-700 hover:bg-green-800' },
-  { value: 50, color: 'bg-emerald-600 hover:bg-emerald-700' },
-  { value: -5, color: 'bg-red-400 hover:bg-red-500' },
-  { value: -10, color: 'bg-red-500 hover:bg-red-600' },
-  { value: -15, color: 'bg-red-600 hover:bg-red-700' },
-  { value: -50, color: 'bg-rose-600 hover:bg-rose-700' },
+  { value: 1, color: 'bg-green-500 hover:bg-green-600' },
+  { value: 5, color: 'bg-green-600 hover:bg-green-700' },
+  { value: 10, color: 'bg-green-700 hover:bg-green-800' },
+  { value: 50, color: 'bg-emerald-700 hover:bg-emerald-800' },
+  { value: -1, color: 'bg-red-400 hover:bg-red-500' },
+  { value: -5, color: 'bg-red-500 hover:bg-red-600' },
+  { value: -10, color: 'bg-red-600 hover:bg-red-700' },
+  { value: -50, color: 'bg-red-700 hover:bg-red-800' },
 ]
 
 export default function ScoreTrackerPlayer({ params }: { params: Promise<{ gameId: string }> }) {
@@ -114,18 +112,18 @@ export default function ScoreTrackerPlayer({ params }: { params: Promise<{ gameI
         </Card>
 
         {/* Team Selector */}
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-4">
+        <div className="flex gap-3 overflow-x-auto pb-2 mb-4">
           {teams.map((team) => (
             <button
               key={team.name}
               onClick={() => setSelectedTeam(team.name)}
-              className={`flex-shrink-0 px-4 py-3 rounded-lg transition-colors ${
+              className={`flex-shrink-0 px-5 py-3 rounded-xl transition-all ${
                 selectedTeam === team.name
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-card hover:bg-muted'
+                  ? 'bg-white text-black ring-4 ring-white/50 shadow-lg scale-105'
+                  : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
               }`}
             >
-              <p className="font-medium whitespace-nowrap">{team.name}</p>
+              <p className="text-sm font-medium whitespace-nowrap opacity-80">{team.name}</p>
               <p className="text-2xl font-bold">{team.score}</p>
             </button>
           ))}
